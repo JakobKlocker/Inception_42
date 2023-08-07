@@ -5,13 +5,13 @@ volumes:
                 driver: local
                 driver_opts:
                         type: none
-                        device: /home/jakob/data/mysql
+                        device: /home/jklocker/data/mysql
                         o: bind
         wordpress_data:
                 driver: local
                 driver_opts:
                         type: none
-                        device: /home/jakob/data/wordpress
+                        device: /home/jklocker/data/wordpress
                         o: bind
                         
 networks:
