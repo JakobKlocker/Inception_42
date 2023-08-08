@@ -1,0 +1,57 @@
+version: '3'
+
+volumes:
+        mariadb_data:
+                driver: local
+                driver_opts:
+                        type: none
+                        device: /home/jklocker/data/mysql
+                        o: bind
+        wordpress_data:
+                driver: local
+                driver_opts:
+                        type: none
+                        device: /home/jklocker/data/wordpress
+                        o: bind
+                        
+networks:
+  network:
+    driver: bridge
+
+services:
+        nginx:
+                container_name: nginx
+                build: ./requirements/nginx/
+                restart: always
+                env_file:
+                - .env
+                ports:
+                - 443:443
+                volumes:
+                - wordpress_data:/var/www/html
+                networks:
+                - network
+        mariadb:
+                container_name: mariadb
+                build: ./requirements/mariadb/
+                restart: always
+                env_file:
+                - .env
+                volumes:
+                - mariadb_data:/var/lib/mysql
+                networks:
+                - network
+        wordpress:
+                container_name: wordpress
+                depends_on:
+                - mariadb
+                build: 
+                 context: ./requirements/wordpress
+                 dockerfile: Dockerfile
+                restart: always
+                env_file:
+                - .env
+                volumes:
+                - wordpress_data:/var/www/html
+                networks:
+                - network
